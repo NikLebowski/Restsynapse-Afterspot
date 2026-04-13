@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RESTSYNAPSE · After Edition</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0a0f;--surface:#12121f;--accent:#ff00ff;--accent2:#00ffff;--accent3:#ff6600;--text:#e0e0f0;--text-dim:#5a5a7a;--cs:170px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Orbitron',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:14px;
+background-image:radial-gradient(ellipse at 20% 40%,rgba(255,0,255,.04) 0%,transparent 50%),radial-gradient(ellipse at 80% 60%,rgba(0,255,255,.04) 0%,transparent 50%)}
+h1{text-align:center;font-size:1.5em;font-weight:900;letter-spacing:3px;text-transform:uppercase;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1.2}
+.edition{text-align:center;font-size:.7em;font-weight:700;letter-spacing:6px;text-transform:uppercase;color:var(--accent3);margin-bottom:4px}
+.tagline{text-align:center;color:var(--text-dim);font-size:.42em;margin-bottom:14px;letter-spacing:2px;font-style:italic}
+.stats{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.stat{background:var(--surface);border:1px solid #222;border-radius:8px;padding:5px 12px;text-align:center}
+.stat b{display:block;font-size:1.1em;color:var(--accent2)}.stat span{font-size:.42em;color:var(--text-dim);letter-spacing:1px}
+.ctrls{display:flex;justify-content:center;gap:7px;flex-wrap:wrap;margin-bottom:10px}
+.ctrls button{font-family:'Orbitron',sans-serif;background:var(--surface);color:var(--text);border:1px solid #333;border-radius:7px;padding:5px 11px;font-size:.55em;cursor:pointer;transition:.2s;letter-spacing:1px}
+.ctrls button:hover{border-color:var(--accent);box-shadow:0 0 8px rgba(255,0,255,.3)}
+.ctrls button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.info{text-align:center;padding:9px;background:var(--surface);border:1px solid #222;border-radius:9px;margin-bottom:10px;font-size:.6em;min-height:40px;display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;font-family:'JetBrains Mono',monospace}
+.msym{display:inline-flex;align-items:center;gap:4px;background:var(--accent2);color:#000;padding:2px 8px;border-radius:5px;font-weight:700}
+.pal{background:var(--surface);border:1px solid #222;border-radius:9px;padding:10px;margin-bottom:12px}
+.pal-t{font-size:.45em;color:var(--text-dim);margin-bottom:6px;text-align:center;letter-spacing:1px}
+.pal-g{display:flex;flex-wrap:wrap;justify-content:center;gap:5px}
+.ps{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.2s;border:2px solid #333;background:var(--bg);position:relative}
+.ps:hover{transform:scale(1.15);border-color:var(--accent)}
+.ps.hl{border-color:var(--accent);box-shadow:0 0 12px var(--accent);transform:scale(1.15)}
+.ps.mhl{border-color:var(--accent2);box-shadow:0 0 14px var(--accent2);transform:scale(1.2)}
+.ps svg{width:26px;height:26px}
+.cg{display:flex;flex-wrap:wrap;justify-content:center;gap:16px;margin-bottom:16px}
+.dc{width:var(--cs);height:var(--cs);border-radius:50%;background:radial-gradient(circle at 40% 35%,#1e1e3a,#0c0c18);position:relative;cursor:pointer;transition:.25s;border:3px solid #333;box-shadow:0 4px 15px rgba(0,0,0,.5)}
+.dc:hover{transform:scale(1.05);border-color:#555}
+.dc.s1{border-color:var(--accent);box-shadow:0 0 22px rgba(255,0,255,.4)}
+.dc.s2{border-color:var(--accent2);box-shadow:0 0 22px rgba(0,255,255,.4)}
+.cl{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:.4em;color:#333;pointer-events:none;z-index:0}
+.cs{position:absolute;display:flex;align-items:center;justify-content:center;transition:.3s;pointer-events:none;z-index:1}
+.cs.im{filter:drop-shadow(0 0 8px rgba(0,255,255,.9));z-index:10}
+.cs.ih{filter:drop-shadow(0 0 6px rgba(255,0,255,.8));z-index:10}
+.cs.dm{opacity:.12}
+.hidden{display:none}
+.foot{background:var(--surface);border:1px solid #222;border-radius:9px;padding:10px;font-size:.5em;color:var(--text-dim);line-height:1.6;margin-top:12px;font-family:'JetBrains Mono',monospace}
+.foot strong{color:var(--text)}
+.t30{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px}
+.t30 label{font-size:.5em;color:var(--text-dim);cursor:pointer}
+
+/* Rules overlay */
+.rules-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.85);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px}
+.rules-box{background:var(--surface);border:1px solid #333;border-radius:14px;padding:20px;max-width:500px;width:100%;max-height:80vh;overflow-y:auto;font-family:'JetBrains Mono',monospace;font-size:.7em;line-height:1.7;color:var(--text-dim)}
+.rules-box h2{font-family:'Orbitron',sans-serif;font-size:1.3em;color:var(--accent2);margin-bottom:10px;letter-spacing:2px}
+.rules-box h3{font-family:'Orbitron',sans-serif;font-size:.9em;color:var(--accent);margin-top:14px;margin-bottom:4px}
+.rules-box strong{color:var(--text)}
+.rules-box .close-rules{font-family:'Orbitron',sans-serif;background:var(--accent);color:#fff;border:none;border-radius:8px;padding:8px 20px;font-size:.9em;cursor:pointer;margin-top:14px;display:block;width:100%;letter-spacing:2px}
+</style>
+</head>
+<body>
+
+<h1>RESTSYNAPSE</h1>
+<div class="edition">— After Edition —</div>
+<p class="tagline">Die letzte Synapse die noch feuert. Finde das Match.</p>
+
+<div class="stats">
+<div class="stat"><b id="sS">31</b><span>Symbole</span></div>
+<div class="stat"><b id="sC">31</b><span>Karten</span></div>
+<div class="stat"><b>6</b><span>Pro Karte</span></div>
+<div class="stat"><b id="sP">465</b><span>Paare</span></div>
+</div>
+<div class="t30"><label><input type="checkbox" id="c30" onchange="t30()"> Nur 30 Karten</label></div>
+<div class="ctrls">
+<button id="bC" class="on" onclick="sv('c')">Karten</button>
+<button id="bM" onclick="sv('m')">Matrix</button>
+<button onclick="verify()">Prüfen ✓</button>
+<button onclick="showRules()">Regeln</button>
+<button onclick="clr()">Reset</button>
+</div>
+<div class="info" id="nfo">Zwei Karten antippen → gemeinsames Symbol finden</div>
+<div class="pal">
+<div class="pal-t">31 Symbole</div>
+<div class="pal-g" id="pg"></div>
+</div>
+<div id="vc"><div class="cg" id="cg"></div></div>
+<div id="vm" class="hidden"><div id="mc" style="overflow-x:auto"></div></div>
+
+<div class="foot">
+<strong>RESTSYNAPSE · After Edition</strong> — Ein Spiel für die Stunde nach der Stunde.
+31 Symbole, 31 Karten, 6 pro Karte. Jedes Paar hat genau 1 Match.
+Projektive Ebene der Ordnung 5.
+</div>
+
+<!-- Rules overlay -->
+<div class="rules-overlay hidden" id="rules">
+<div class="rules-box">
+<h2>RESTSYNAPSE</h2>
+<h3>Das Prinzip</h3>
+Zwischen je zwei Karten gibt es immer <strong>genau ein</strong> gemeinsames Symbol. Wer es zuerst findet, gewinnt die Runde.
+
+<h3>Setup</h3>
+Mischt die 30 Karten. Jeder Spieler bekommt einen verdeckten Stapel. Eine Karte kommt offen in die Mitte.
+
+<h3>Spielablauf</h3>
+Alle decken gleichzeitig ihre oberste Karte auf. Wer als Erster das gemeinsame Symbol zwischen seiner Karte und der Mittelkarte findet, ruft es laut und legt seine Karte auf die Mitte. Das ist die neue Mittelkarte. Weiter geht's.
+
+<h3>Wer gewinnt?</h3>
+Wer zuerst alle Karten losgeworden ist. Oder: Wer nach X Runden die wenigsten Karten hat.
+
+<h3>Afterhour-Varianten</h3>
+<strong>Paranoia-Modus:</strong> Wer ein falsches Symbol ruft, bekommt 2 Strafkarten.
+
+<strong>Slow Motion:</strong> Alle müssen flüstern. Wer schreit, bekommt eine Strafkarte.
+
+<strong>Sunrise:</strong> Spielt bis die Sonne aufgeht. Wer dann die wenigsten Karten hat, darf den nächsten Track wählen.
+
+<button class="close-rules" onclick="hideRules()">VERSTANDEN</button>
+</div>
+</div>
+
+<script>
+const N=5,T=31,SZ=170;
+const SYM=[
+{n:'Discokugel',s:'<svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="14" fill="none" stroke="#ccc" stroke-width="1.5"/><rect x="15" y="7" width="5" height="4" fill="#aaa" rx=".5"/><rect x="22" y="10" width="4" height="4" fill="#ddd" rx=".5"/><rect x="9" y="13" width="5" height="4" fill="#bbb" rx=".5"/><rect x="17" y="14" width="4" height="3" fill="#eee" rx=".5"/><rect x="24" y="17" width="4" height="4" fill="#999" rx=".5"/><rect x="11" y="20" width="5" height="4" fill="#ddd" rx=".5"/><rect x="19" y="20" width="4" height="4" fill="#ccc" rx=".5"/><rect x="14" y="26" width="4" height="4" fill="#bbb" rx=".5"/><rect x="21" y="26" width="4" height="3" fill="#eee" rx=".5"/><line x1="20" y1="2" x2="20" y2="6" stroke="#888" stroke-width="1"/></svg>'},
+{n:'Kopfhörer',s:'<svg viewBox="0 0 40 40"><path d="M10 24C10 15,30 15,30 24" fill="none" stroke="#ff00ff" stroke-width="2.5" stroke-linecap="round"/><rect x="7" y="23" width="6" height="10" rx="3" fill="#ff00ff"/><rect x="27" y="23" width="6" height="10" rx="3" fill="#ff00ff"/></svg>'},
+{n:'Vinyl',s:'<svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="15" fill="#111" stroke="#444" stroke-width="1"/><circle cx="20" cy="20" r="5" fill="#ff6600"/><circle cx="20" cy="20" r="1.5" fill="#111"/><circle cx="20" cy="20" r="10" fill="none" stroke="#222" stroke-width=".5"/><circle cx="20" cy="20" r="13" fill="none" stroke="#1a1a1a" stroke-width=".3"/></svg>'},
+{n:'Blitz',s:'<svg viewBox="0 0 40 40"><polygon points="22,4 12,22 18,22 16,36 28,16 21,16" fill="#ffcc00" stroke="#ff9900" stroke-width=".5"/></svg>'},
+{n:'Bassbox',s:'<svg viewBox="0 0 40 40"><rect x="6" y="8" width="28" height="24" rx="3" fill="#222" stroke="#555" stroke-width="1.5"/><circle cx="20" cy="20" r="8" fill="#111" stroke="#666" stroke-width="1.5"/><circle cx="20" cy="20" r="3" fill="#333"/></svg>'},
+{n:'Laser',s:'<svg viewBox="0 0 40 40"><line x1="20" y1="4" x2="4" y2="36" stroke="#00ff00" stroke-width="1.5" opacity=".8"/><line x1="20" y1="4" x2="36" y2="36" stroke="#00ff00" stroke-width="1.5" opacity=".8"/><line x1="20" y1="4" x2="20" y2="38" stroke="#00ff00" stroke-width="1.5" opacity=".6"/><line x1="20" y1="4" x2="10" y2="30" stroke="#00ff88" stroke-width="1" opacity=".4"/><line x1="20" y1="4" x2="30" y2="30" stroke="#00ff88" stroke-width="1" opacity=".4"/><circle cx="20" cy="4" r="2" fill="#00ff00"/></svg>'},
+{n:'Pille',s:'<svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="12" fill="#ddd" stroke="#bbb" stroke-width="1"/><line x1="10" y1="20" x2="30" y2="20" stroke="#bbb" stroke-width="1.5"/><circle cx="20" cy="14" r="1.5" fill="#aaa"/></svg>'},
+{n:'Stroboskop',s:'<svg viewBox="0 0 40 40"><rect x="10" y="6" width="20" height="28" rx="3" fill="#222" stroke="#fff" stroke-width="1.5"/><rect x="14" y="10" width="12" height="8" rx="1" fill="#fff"/><rect x="14" y="22" width="12" height="8" rx="1" fill="#fff" opacity=".4"/></svg>'},
+{n:'Herzschlag',s:'<svg viewBox="0 0 40 40"><polyline points="4,22 12,22 15,12 18,30 21,18 24,24 28,22 36,22" fill="none" stroke="#ff0066" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'},
+{n:'Mitsubishi',s:'<svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="13" fill="#ee3333" stroke="#cc2222" stroke-width="1"/><polygon points="20,9 14,19 20,17 26,19" fill="#fff" opacity=".9"/><polygon points="14,19 11,27 20,22 20,17" fill="#fff" opacity=".7"/><polygon points="26,19 29,27 20,22 20,17" fill="#fff" opacity=".7"/></svg>'},
+{n:'Stern',s:'<svg viewBox="0 0 40 40"><polygon points="20,4 24,15 36,15 27,23 30,34 20,28 10,34 13,23 4,15 16,15" fill="#00ffff"/></svg>'},
+{n:'Plattenspieler',s:'<svg viewBox="0 0 40 40"><rect x="3" y="8" width="34" height="26" rx="3" fill="#2a2a3a" stroke="#555" stroke-width="1"/><circle cx="17" cy="22" r="10" fill="#111" stroke="#444" stroke-width=".8"/><circle cx="17" cy="22" r="7" fill="none" stroke="#222" stroke-width=".4"/><circle cx="17" cy="22" r="4" fill="none" stroke="#252525" stroke-width=".3"/><circle cx="17" cy="22" r="1.8" fill="#ff6600"/><line x1="30" y1="11" x2="18" y2="21" stroke="#aaa" stroke-width="1.5" stroke-linecap="round"/><circle cx="30" cy="11" r="2" fill="#888" stroke="#aaa" stroke-width=".5"/><rect x="30" y="26" width="5" height="3" rx="1" fill="#444"/></svg>'},
+{n:'Equalizer',s:'<svg viewBox="0 0 40 40"><rect x="6" y="20" width="4" height="14" rx="1" fill="#00ffff"/><rect x="12" y="12" width="4" height="22" rx="1" fill="#00ddff"/><rect x="18" y="6" width="4" height="28" rx="1" fill="#00bbff"/><rect x="24" y="14" width="4" height="20" rx="1" fill="#00ddff"/><rect x="30" y="18" width="4" height="16" rx="1" fill="#00ffff"/></svg>'},
+{n:'Cocktail',s:'<svg viewBox="0 0 40 40"><polygon points="8,10 32,10 20,26" fill="none" stroke="#ff6600" stroke-width="2"/><line x1="20" y1="26" x2="20" y2="34" stroke="#ff6600" stroke-width="2"/><line x1="14" y1="34" x2="26" y2="34" stroke="#ff6600" stroke-width="2" stroke-linecap="round"/><circle cx="27" cy="8" r="3" fill="#ff0066" opacity=".7"/></svg>'},
+{n:'Pupille',s:'<svg viewBox="0 0 40 40"><ellipse cx="20" cy="20" rx="14" ry="8" fill="none" stroke="#cc55ff" stroke-width="2"/><circle cx="20" cy="20" r="7" fill="#111"/><circle cx="20" cy="20" r="6.5" fill="#111" stroke="#cc55ff" stroke-width=".5"/><circle cx="22" cy="18" r="1.5" fill="#fff" opacity=".6"/></svg>'},
+{n:'Flamme',s:'<svg viewBox="0 0 40 40"><path d="M20,4C20,4 30,16 28,24C26,32 14,32 12,24C10,16 20,4 20,4Z" fill="#ff4400" opacity=".8"/><path d="M20,14C20,14 26,20 24,26C22,30 18,30 16,26C14,20 20,14 20,14Z" fill="#ffaa00"/><path d="M20,20C20,20 23,24 22,28C21,30 19,30 18,28C17,24 20,20 20,20Z" fill="#ffdd44"/></svg>'},
+{n:'Blotter',s:'<svg viewBox="0 0 40 40"><rect x="8" y="8" width="24" height="24" fill="#fff" stroke="#ccc" stroke-width=".5"/><line x1="8" y1="14" x2="32" y2="14" stroke="#ddd" stroke-width=".3"/><line x1="8" y1="20" x2="32" y2="20" stroke="#ddd" stroke-width=".3"/><line x1="8" y1="26" x2="32" y2="26" stroke="#ddd" stroke-width=".3"/><line x1="14" y1="8" x2="14" y2="32" stroke="#ddd" stroke-width=".3"/><line x1="20" y1="8" x2="20" y2="32" stroke="#ddd" stroke-width=".3"/><line x1="26" y1="8" x2="26" y2="32" stroke="#ddd" stroke-width=".3"/><circle cx="17" cy="17" r="3" fill="#ff00ff" opacity=".4"/><circle cx="23" cy="11" r="2" fill="#00ffff" opacity=".4"/><circle cx="11" cy="23" r="2.5" fill="#ffcc00" opacity=".4"/><circle cx="26" cy="23" r="2" fill="#ff4444" opacity=".5"/><circle cx="17" cy="29" r="2" fill="#00ff88" opacity=".4"/><circle cx="29" cy="29" r="1.5" fill="#ff66cc" opacity=".4"/></svg>'},
+{n:'Kleeblatt',s:'<svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="13" fill="#22cc44" stroke="#1a9e35" stroke-width="1"/><circle cx="16" cy="14" r="4" fill="#fff" opacity=".8"/><circle cx="24" cy="14" r="4" fill="#fff" opacity=".8"/><circle cx="14" cy="21" r="4" fill="#fff" opacity=".8"/><circle cx="26" cy="21" r="4" fill="#fff" opacity=".8"/><line x1="20" y1="22" x2="20" y2="30" stroke="#fff" stroke-width="2" opacity=".7" stroke-linecap="round"/></svg>'},
+{n:'Totenkopf',s:'<svg viewBox="0 0 40 40"><circle cx="20" cy="16" r="11" fill="#ddd"/><rect x="14" y="24" width="12" height="8" rx="2" fill="#ddd"/><circle cx="16" cy="15" r="3" fill="#111"/><circle cx="24" cy="15" r="3" fill="#111"/><ellipse cx="20" cy="22" rx="2" ry="1.5" fill="#111"/><line x1="16" y1="28" x2="16" y2="32" stroke="#111" stroke-width="1.5"/><line x1="20" y1="28" x2="20" y2="32" stroke="#111" stroke-width="1.5"/><line x1="24" y1="28" x2="24" y2="32" stroke="#111" stroke-width="1.5"/></svg>'},
+{n:'Neonstern',s:'<svg viewBox="0 0 40 40"><polygon points="20,6 23,16 34,16 25,22 28,33 20,26 12,33 15,22 6,16 17,16" fill="none" stroke="#ff00ff" stroke-width="2.5"/></svg>'},
+{n:'Pilz',s:'<svg viewBox="0 0 40 40"><ellipse cx="20" cy="17" rx="14" ry="11" fill="#8833cc"/><circle cx="14" cy="13" r="3" fill="#fff" opacity=".6"/><circle cx="25" cy="11" r="2.5" fill="#fff" opacity=".5"/><circle cx="18" cy="20" r="2" fill="#fff" opacity=".4"/><circle cx="27" cy="18" r="1.5" fill="#fff" opacity=".5"/><rect x="16" y="24" width="8" height="10" rx="2" fill="#eedd99"/></svg>'},
+{n:'Smiley',s:'<svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="14" fill="#ffdd00" stroke="#ddaa00" stroke-width="1"/><circle cx="14" cy="16" r="2.5" fill="#111"/><circle cx="26" cy="16" r="2.5" fill="#111"/><path d="M12,24Q20,32 28,24" fill="none" stroke="#111" stroke-width="2" stroke-linecap="round"/></svg>'},
+{n:'Herz-Pille',s:'<svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="13" fill="#ff69b4" stroke="#dd5599" stroke-width="1"/><path d="M20,14 L16,10 C13,7 8,9 8,14 C8,19 20,28 20,28 C20,28 32,19 32,14 C32,9 27,7 24,10 Z" fill="#fff" opacity=".8"/></svg>'},
+{n:'Glowstick',s:'<svg viewBox="0 0 40 40"><rect x="17" y="4" width="6" height="32" rx="3" fill="#00ff66" opacity=".8" stroke="#00cc44" stroke-width=".5"/><rect x="17" y="4" width="6" height="6" rx="3" fill="#00ff66"/><line x1="20" y1="10" x2="20" y2="36" stroke="#00ff88" stroke-width="1" opacity=".3"/></svg>'},
+{n:'Nebel',s:'<svg viewBox="0 0 40 40"><rect x="8" y="22" width="24" height="12" rx="3" fill="#444" stroke="#666" stroke-width="1"/><rect x="14" y="18" width="4" height="6" rx="1" fill="#555"/><path d="M12,18 Q14,10 18,12 Q22,6 26,10 Q30,8 32,14" fill="none" stroke="#aaa" stroke-width="1.5" opacity=".5" stroke-linecap="round"/><path d="M8,16 Q12,8 16,11 Q20,4 24,8 Q28,5 30,10" fill="none" stroke="#888" stroke-width="1" opacity=".3" stroke-linecap="round"/></svg>'},
+{n:'Schmetterling',s:'<svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="13" fill="#9944ff" stroke="#7733dd" stroke-width="1"/><ellipse cx="14" cy="16" rx="6" ry="5" fill="#fff" opacity=".7" transform="rotate(-15 14 16)"/><ellipse cx="26" cy="16" rx="6" ry="5" fill="#fff" opacity=".7" transform="rotate(15 26 16)"/><ellipse cx="14" cy="24" rx="4" ry="4" fill="#fff" opacity=".5" transform="rotate(-10 14 24)"/><ellipse cx="26" cy="24" rx="4" ry="4" fill="#fff" opacity=".5" transform="rotate(10 26 24)"/><line x1="20" y1="10" x2="20" y2="30" stroke="#fff" stroke-width="1.5" opacity=".6"/></svg>'},
+{n:'Afterhour',s:'<svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="14" fill="none" stroke="#ff6600" stroke-width="2"/><line x1="20" y1="20" x2="20" y2="10" stroke="#ff6600" stroke-width="2" stroke-linecap="round"/><line x1="20" y1="20" x2="28" y2="26" stroke="#ff6600" stroke-width="1.5" stroke-linecap="round"/><circle cx="20" cy="20" r="2" fill="#ff6600"/><text x="20" y="38" text-anchor="middle" fill="#ff6600" font-size="5" font-family="Orbitron" opacity=".7">4:00</text></svg>'},
+{n:'MC Mikro',s:'<svg viewBox="0 0 40 40"><rect x="16" y="6" width="8" height="14" rx="4" fill="#ccc" stroke="#999" stroke-width="1"/><path d="M12,18C12,25 28,25 28,18" fill="none" stroke="#999" stroke-width="1.5"/><line x1="20" y1="25" x2="20" y2="32" stroke="#999" stroke-width="1.5"/><line x1="14" y1="32" x2="26" y2="32" stroke="#999" stroke-width="1.5" stroke-linecap="round"/></svg>'},
+{n:'Skull-Pille',s:'<svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="13" fill="#333" stroke="#555" stroke-width="1"/><circle cx="20" cy="16" r="7" fill="none" stroke="#aaa" stroke-width="1.2"/><circle cx="17" cy="15" r="2" fill="#aaa" opacity=".7"/><circle cx="23" cy="15" r="2" fill="#aaa" opacity=".7"/><ellipse cx="20" cy="19" rx="1.5" ry="1" fill="#aaa" opacity=".5"/><rect x="17" y="21" width="6" height="5" rx="1" fill="none" stroke="#aaa" stroke-width=".8" opacity=".5"/></svg>'},
+{n:'Konfetti',s:'<svg viewBox="0 0 40 40"><rect x="6" y="8" width="4" height="8" rx="1" fill="#ff00ff" transform="rotate(25 8 12)"/><rect x="16" y="4" width="3" height="7" rx="1" fill="#00ffff" transform="rotate(-15 17 7)"/><rect x="28" y="6" width="4" height="8" rx="1" fill="#ffcc00" transform="rotate(35 30 10)"/><rect x="10" y="22" width="3" height="7" rx="1" fill="#ff6600" transform="rotate(-30 11 25)"/><rect x="22" y="18" width="4" height="6" rx="1" fill="#00ff66" transform="rotate(20 24 21)"/><rect x="30" y="24" width="3" height="7" rx="1" fill="#ff0066" transform="rotate(-25 31 27)"/><circle cx="14" cy="16" r="2" fill="#ffdd00"/><circle cx="26" cy="30" r="2" fill="#00ffff"/><circle cx="8" cy="32" r="1.5" fill="#ff00ff"/></svg>'},
+{n:'Unendlich',s:'<svg viewBox="0 0 40 40"><path d="M12,20C12,14 6,10 6,20C6,30 12,26 20,20C28,14 34,10 34,20C34,30 28,26 20,20" fill="none" stroke="#ff44aa" stroke-width="2.5" stroke-linecap="round"/></svg>'}
+];
+
+function mod(a,n){return((a%n)+n)%n}
+function genCards(){
+const cards=[];
+for(let m=0;m<N;m++)for(let b=0;b<N;b++){const c=[];for(let x=0;x<N;x++)c.push(x*N+mod(m*x+b,N));c.push(N*N+m);cards.push(c)}
+for(let x=0;x<N;x++){const c=[];for(let y=0;y<N;y++)c.push(x*N+y);c.push(N*N+N);cards.push(c)}
+const c=[];for(let m=0;m<N;m++)c.push(N*N+m);c.push(N*N+N);cards.push(c);
+return cards;
+}
+const allC=genCards();
+let u30=false,sel=[],hlS=null;
+function gc(){return u30?allC.slice(0,30):allC}
+
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+
+function genLayout(ci){
+const rng=mulberry32(ci*7919+1337);
+const R=SZ/2,pad=18,minS=24,maxS=36;
+const pos=[],szs=[];
+const sp=[1,.92,.88,.82,.78,.72];
+for(let i=sp.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[sp[i],sp[j]]=[sp[j],sp[i]]}
+for(let i=0;i<6;i++){
+const ss=minS+(maxS-minS)*sp[i];
+let tries=0,x,y;
+do{const a=rng()*Math.PI*2,d=rng()*(R-pad-ss/2);
+x=R+Math.cos(a)*d;y=R+Math.sin(a)*d;tries++;
+let ok=true;
+for(let j=0;j<pos.length;j++){const dx=x-pos[j].x,dy=y-pos[j].y,mn=(ss+szs[j])/2+2;if(dx*dx+dy*dy<mn*mn){ok=false;break}}
+const cx=x-R,cy=y-R;if(Math.sqrt(cx*cx+cy*cy)+ss/2>R-6)ok=false;
+if(ok||tries>200)break}while(true);
+pos.push({x,y});szs.push(ss)}
+const rots=[];for(let i=0;i<6;i++)rots.push((rng()-.5)*30);
+return pos.map((p,i)=>({x:p.x,y:p.y,sz:szs[i],rot:rots[i]}));
+}
+
+function buildPal(){
+const p=document.getElementById('pg');p.innerHTML='';
+for(let i=0;i<T;i++){const d=document.createElement('div');d.className='ps';d.id='p'+i;d.innerHTML=SYM[i].s;d.title=SYM[i].n;d.onclick=()=>cSym(i);p.appendChild(d)}
+}
+function buildCards(){
+const g=document.getElementById('cg');g.innerHTML='';
+gc().forEach((card,idx)=>{
+const d=document.createElement('div');d.className='dc';d.id='d'+idx;d.onclick=()=>cCard(idx);
+const l=document.createElement('div');l.className='cl';l.textContent=idx;d.appendChild(l);
+const layout=genLayout(idx);
+card.forEach((s,si)=>{
+const e=document.createElement('div');e.className='cs';e.id='s'+idx+'_'+s;
+const lo=layout[si];
+e.style.left=(lo.x-lo.sz/2)+'px';e.style.top=(lo.y-lo.sz/2)+'px';
+e.style.width=lo.sz+'px';e.style.height=lo.sz+'px';
+e.style.transform='rotate('+lo.rot+'deg)';
+e.innerHTML=SYM[s].s;
+const svg=e.querySelector('svg');svg.style.width='100%';svg.style.height='100%';
+d.appendChild(e)});g.appendChild(d)});
+}
+function buildMx(){
+const cs=gc(),c=document.getElementById('mc');
+let h='<table style="border-collapse:collapse;font-size:.48em;margin:0 auto;font-family:monospace"><tr><th style="padding:2px"></th>';
+for(let s=0;s<T;s++)h+='<th style="width:15px;height:15px;padding:0;color:#556;background:#12121f">'+s+'</th>';
+h+='</tr>';
+cs.forEach((card,i)=>{const set=new Set(card);h+='<tr><th style="padding:1px 3px;color:#556;background:#12121f">'+i+'</th>';
+for(let s=0;s<T;s++)h+='<td style="width:15px;height:15px;padding:0;background:'+(set.has(s)?'#ff00ff':'#0a0a0f')+';border:1px solid #1a1a2a"></td>';
+h+='</tr>'});h+='</table>';c.innerHTML=h;
+}
+function reset(){
+document.querySelectorAll('.ps').forEach(e=>e.classList.remove('hl','mhl'));
+document.querySelectorAll('.dc').forEach(e=>e.classList.remove('s1','s2'));
+document.querySelectorAll('.cs').forEach(e=>e.classList.remove('im','ih','dm'));
+}
+function cCard(i){hlS=null;reset();const p=sel.indexOf(i);if(p>=0)sel.splice(p,1);else{if(sel.length>=2)sel.shift();sel.push(i)}upd()}
+function cSym(s){sel=[];reset();if(hlS===s){hlS=null;si('Zwei Karten antippen → gemeinsames Symbol finden');return}
+hlS=s;document.getElementById('p'+s).classList.add('hl');const cs=gc(),found=[];
+cs.forEach((card,idx)=>{if(card.includes(s)){found.push(idx);document.getElementById('d'+idx).classList.add('s1');document.getElementById('s'+idx+'_'+s).classList.add('ih');card.forEach(o=>{if(o!==s)document.getElementById('s'+idx+'_'+o).classList.add('dm')})}});
+si('<b>'+SYM[s].n+'</b> kommt auf <b>'+found.length+' Karten</b> vor: '+found.join(', '))}
+function upd(){const cs=gc();if(sel.length>=1)document.getElementById('d'+sel[0]).classList.add('s1');
+if(sel.length>=2){document.getElementById('d'+sel[1]).classList.add('s2');const s1=new Set(cs[sel[0]]),match=cs[sel[1]].filter(s=>s1.has(s));
+if(match.length===1){const m=match[0];document.getElementById('s'+sel[0]+'_'+m).classList.add('im');document.getElementById('s'+sel[1]+'_'+m).classList.add('im');document.getElementById('p'+m).classList.add('mhl');
+cs[sel[0]].forEach(s=>{if(s!==m)document.getElementById('s'+sel[0]+'_'+s).classList.add('dm')});cs[sel[1]].forEach(s=>{if(s!==m)document.getElementById('s'+sel[1]+'_'+s).classList.add('dm')});
+si('Karte <b>'+sel[0]+'</b> ∩ Karte <b>'+sel[1]+'</b> = <span class="msym">'+SYM[m].n+'</span> ✓')}}
+else if(sel.length===1)si('Karte <b>'+sel[0]+'</b> gewählt — wähle eine zweite');else si('Zwei Karten antippen → gemeinsames Symbol finden')}
+function si(h){document.getElementById('nfo').innerHTML=h}
+function clr(){sel=[];hlS=null;reset();si('Zwei Karten antippen → gemeinsames Symbol finden')}
+function sv(v){document.getElementById('vc').classList.toggle('hidden',v!=='c');document.getElementById('vm').classList.toggle('hidden',v!=='m');document.getElementById('bC').classList.toggle('on',v==='c');document.getElementById('bM').classList.toggle('on',v==='m')}
+function t30(){u30=document.getElementById('c30').checked;const c=gc();document.getElementById('sC').textContent=c.length;document.getElementById('sP').textContent=c.length*(c.length-1)/2;clr();buildCards();buildMx()}
+function verify(){const cs=gc();let ok=0,fail=0;for(let i=0;i<cs.length;i++)for(let j=i+1;j<cs.length;j++){const s1=new Set(cs[i]);cs[j].filter(s=>s1.has(s)).length===1?ok++:fail++}
+si(fail===0?'<b>✓ Alle '+ok+' Paare — jedes genau 1 Match!</b>':ok+' OK, <b>'+fail+' fehlerhaft ✗</b>')}
+function showRules(){document.getElementById('rules').classList.remove('hidden')}
+function hideRules(){document.getElementById('rules').classList.add('hidden')}
+buildPal();buildCards();buildMx();
+</script>
+</body>
+</html>
