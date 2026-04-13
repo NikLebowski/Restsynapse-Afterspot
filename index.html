@@ -47,7 +47,8 @@ h1{text-align:center;font-size:1.5em;font-weight:900;letter-spacing:3px;text-tra
 .t30 label{font-size:.5em;color:var(--text-dim);cursor:pointer}
 
 /* Rules overlay */
-.rules-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.85);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px}
+.rules-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.85);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px;cursor:pointer}
+.rules-box{cursor:default}
 .rules-box{background:var(--surface);border:1px solid #333;border-radius:14px;padding:20px;max-width:500px;width:100%;max-height:80vh;overflow-y:auto;font-family:'JetBrains Mono',monospace;font-size:.7em;line-height:1.7;color:var(--text-dim)}
 .rules-box h2{font-family:'Orbitron',sans-serif;font-size:1.3em;color:var(--accent2);margin-bottom:10px;letter-spacing:2px}
 .rules-box h3{font-family:'Orbitron',sans-serif;font-size:.9em;color:var(--accent);margin-top:14px;margin-bottom:4px}
@@ -90,9 +91,12 @@ Projektive Ebene der Ordnung 5.
 </div>
 
 <!-- Rules overlay -->
-<div class="rules-overlay hidden" id="rules">
-<div class="rules-box">
-<h2>RESTSYNAPSE</h2>
+<div class="rules-overlay hidden" id="rules" onclick="hideRules()">
+<div class="rules-box" onclick="event.stopPropagation()">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+<h2 style="margin:0">RESTSYNAPSE</h2>
+<button onclick="hideRules()" style="background:none;border:none;color:var(--accent);font-size:1.8em;cursor:pointer;line-height:1;padding:0 4px;font-family:sans-serif" title="Schließen">&times;</button>
+</div>
 <h3>Das Prinzip</h3>
 Zwischen je zwei Karten gibt es immer <strong>genau ein</strong> gemeinsames Symbol. Wer es zuerst findet, gewinnt die Runde.
 
